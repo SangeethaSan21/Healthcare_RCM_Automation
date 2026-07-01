@@ -7,7 +7,7 @@ test.describe('AR Calling Module', () => {
 
   test.beforeEach(async ({ page }) => {
     arPage = new ARCallingPage(page);
-    await page.goto(process.env.BASE_URL || 'https://Sangeethasan21.github.io/healthcare_rcm_automation/');
+    await page.goto(process.env.BASE_URL || 'https://SangeethaSan21.github.io/healthcare_rcm_automation/');
     await arPage.goToAR();
   });
 

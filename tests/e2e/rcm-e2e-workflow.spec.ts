@@ -20,7 +20,7 @@ import { patientData, verificationData, claimData, arCallData, paymentData, appe
 test.describe('Full RCM Pipeline — End to End', () => {
 
   test('@e2e Happy path: Patient registers → Insurance verified → Claim submitted → Payment posted', async ({ page }) => {
-    const BASE = process.env.BASE_URL || 'https://Sangeethasan21.github.io/healthcare_rcm_automation/';
+    const BASE = process.env.BASE_URL || 'https://SangeethaSan21.github.io/healthcare_rcm_automation/';
 
     // ── STEP 1: Register Patient ────────────────────────────────────────────
     const patPage = new PatientPage(page);

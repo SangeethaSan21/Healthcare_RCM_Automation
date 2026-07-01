@@ -9,7 +9,7 @@ test.describe('Dashboard Module', () => {
 
   test.beforeEach(async ({ page }) => {
     dashPage = new DashboardPage(page);
-    await page.goto(process.env.BASE_URL || 'https://Sangeethasan21.github.io/healthcare_rcm_automation/');
+    await page.goto(process.env.BASE_URL || 'https://SangeethaSan21.github.io/healthcare_rcm_automation/');
   });
 
   test('@smoke Dashboard loads with all stat cards', async () => {

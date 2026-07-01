@@ -10,7 +10,7 @@ test.describe('Patient Registration Module', () => {
   test.beforeEach(async ({ page }) => {
     patientPage = new PatientPage(page);
     dashPage    = new DashboardPage(page);
-    await page.goto(process.env.BASE_URL || 'https://Sangeethasan21.github.io/healthcare_rcm_automation/');
+    await page.goto(process.env.BASE_URL || 'https://SangeethaSan21.github.io/healthcare_rcm_automation/');
     await patientPage.goToPatients();
   });
 

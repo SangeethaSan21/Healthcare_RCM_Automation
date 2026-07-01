@@ -20,7 +20,7 @@ export default defineConfig({
   use: {
     // GitHub Pages URL — replace YOUR-USERNAME with your actual GitHub username
     // Local dev fallback still works if you haven't deployed yet
-    baseURL: process.env.BASE_URL || 'https://Sangeethasan21.github.io/healthcare_rcm_automation/',
+    baseURL: process.env.BASE_URL || 'https://SangeethaSan21.github.io/healthcare_rcm_automation/',
     headless: true,
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
