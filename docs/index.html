@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MaxtonRCM — Revenue Cycle Management Practice App</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f2f5;--surface:#fff;--surface2:#f8f9fb;
+  --border:#e2e6ed;--border2:#c8cdd6;
+  --text:#1a1d23;--text2:#5a6070;--text3:#9098a8;
+  --accent:#0f6cbd;--accent-bg:#eff6ff;--accent-text:#0e5bab;
+  --green:#16a34a;--green-bg:#f0fdf4;--green-text:#15803d;
+  --yellow:#c27803;--yellow-bg:#fffbeb;--yellow-text:#a16207;
+  --red:#dc2626;--red-bg:#fef2f2;--red-text:#b91c1c;
+  --purple:#7c3aed;--purple-bg:#f5f3ff;--purple-text:#6d28d9;
+  --radius:8px;--shadow:0 1px 3px rgba(0,0,0,.08);--shadow-md:0 4px 16px rgba(0,0,0,.1);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh}
+
+/* TOPBAR */
+.topbar{background:var(--accent);padding:0 20px;display:flex;align-items:center;gap:12px;height:52px;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(15,108,189,.3)}
+.logo{display:flex;align-items:center;gap:9px;color:#fff;font-size:15px;font-weight:700;letter-spacing:-.2px}
+.logo-icon{background:rgba(255,255,255,.2);border-radius:8px;padding:5px 8px;font-size:16px}
+.logo small{font-size:11px;font-weight:400;opacity:.7;margin-left:2px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.user-pill{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.9);font-size:13px}
+.avatar{width:28px;height:28px;background:rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+
+/* LAYOUT */
+.layout{display:flex;min-height:calc(100vh - 52px)}
+.sidebar{width:210px;background:var(--surface);border-right:1px solid var(--border);padding:14px 8px;flex-shrink:0}
+.sidebar-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);padding:0 10px;margin:14px 0 5px}
+.sidebar-link{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);border:none;background:none;width:100%;text-align:left;transition:all .15s;margin-bottom:2px}
+.sidebar-link:hover{background:var(--bg);color:var(--text)}
+.sidebar-link.active{background:var(--accent-bg);color:var(--accent-text)}
+.sidebar-link .icon{font-size:15px;width:18px;text-align:center}
+.badge-count{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 5px;border-radius:10px;min-width:18px;text-align:center}
+
+.main{flex:1;padding:20px;overflow-x:hidden}
+.page{display:none}
+.page.active{display:block}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.page-title{font-size:18px;font-weight:700}
+.page-subtitle{font-size:13px;color:var(--text2);margin-top:3px}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.stat-label{font-size:12px;color:var(--text2);font-weight:500}
+.stat-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.stat-val{font-size:26px;font-weight:800}
+.blue{color:var(--accent)} .blue-bg{background:var(--accent-bg)}
+.green{color:var(--green)} .green-bg{background:var(--green-bg)}
+.yellow{color:var(--yellow)} .yellow-bg{background:var(--yellow-bg)}
+.red{color:var(--red)} .red-bg{background:var(--red-bg)}
+.purple{color:var(--purple)} .purple-bg{background:var(--purple-bg)}
+
+/* CARD / TABLE */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+.card-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface2)}
+.card-title{font-size:13px;font-weight:700;color:var(--text)}
+.search-row{display:flex;gap:8px;margin-bottom:12px}
+.search-input{flex:1;padding:8px 12px 8px 34px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:var(--surface);color:var(--text);outline:none;transition:border-color .15s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239098a8' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:10px center}
+.search-input:focus{border-color:var(--accent)}
+table{width:100%;border-collapse:collapse}
+th{padding:9px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);border-bottom:1px solid var(--border);background:var(--surface2);white-space:nowrap}
+td{padding:11px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#fafbfc}
+
+/* BADGES */
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.b-new{background:#eff6ff;color:#1d4ed8}
+.b-verified{background:var(--green-bg);color:var(--green-text)}
+.b-failed{background:var(--red-bg);color:var(--red-text)}
+.b-pending{background:var(--yellow-bg);color:var(--yellow-text)}
+.b-submitted{background:var(--accent-bg);color:var(--accent-text)}
+.b-approved{background:var(--green-bg);color:var(--green-text)}
+.b-denied{background:var(--red-bg);color:var(--red-text)}
+.b-appealed{background:var(--purple-bg);color:var(--purple-text)}
+.b-paid{background:var(--green-bg);color:var(--green-text)}
+.b-partial{background:var(--yellow-bg);color:var(--yellow-text)}
+.b-outstanding{background:var(--red-bg);color:var(--red-text)}
+.b-active{background:var(--green-bg);color:var(--green-text)}
+.b-inactive{background:#f1f3f5;color:var(--text3)}
+.b-inprogress{background:var(--yellow-bg);color:var(--yellow-text)}
+.b-completed{background:var(--green-bg);color:var(--green-text)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:var(--surface);color:var(--text);transition:all .15s;white-space:nowrap}
+.btn:hover{background:var(--bg)}
+.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-text)}
+.btn.success{background:var(--green-bg);border-color:#86efac;color:var(--green-text)}
+.btn.danger{background:var(--red-bg);border-color:#fca5a5;color:var(--red-text)}
+.btn.warning{background:var(--yellow-bg);border-color:#fcd34d;color:var(--yellow-text)}
+.btn.purple{background:var(--purple-bg);border-color:#c4b5fd;color:var(--purple-text)}
+.btn.sm{padding:4px 10px;font-size:12px}
+.btn-group{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(2px);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border-radius:12px;width:520px;max-width:95vw;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow-md);border:1px solid var(--border)}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:1}
+.modal-title{font-size:15px;font-weight:700}
+.modal-close{background:none;border:none;cursor:pointer;color:var(--text3);padding:4px;border-radius:6px;font-size:18px;line-height:1;transition:all .15s}
+.modal-close:hover{background:var(--bg);color:var(--text)}
+.modal-body{padding:20px}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;background:var(--surface2);border-radius:0 0 12px 12px;position:sticky;bottom:0}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.form-group{margin-bottom:13px}
+.form-group.full{grid-column:1/-1}
+label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px}
+label .req{color:var(--red);margin-left:2px}
+input,select,textarea{width:100%;padding:8px 11px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;background:var(--surface);color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s;font-family:inherit}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(15,108,189,.1)}
+input[readonly]{background:var(--bg);color:var(--text2);cursor:default}
+.field-error{font-size:11px;color:var(--red);margin-top:3px;display:none}
+.field-error.show{display:block}
+.info-box{background:var(--accent-bg);border:1px solid #bfdbfe;border-radius:var(--radius);padding:10px 13px;font-size:12px;color:var(--accent-text);margin-bottom:14px}
+
+/* TIMELINE (claim status) */
+.timeline{display:flex;align-items:center;gap:0;margin:14px 0}
+.tl-step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative}
+.tl-step:not(:last-child)::after{content:'';position:absolute;top:13px;left:50%;width:100%;height:2px;background:var(--border);z-index:0}
+.tl-step.done:not(:last-child)::after{background:var(--green)}
+.tl-dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:11px;z-index:1;position:relative}
+.tl-step.done .tl-dot{background:var(--green);border-color:var(--green);color:#fff}
+.tl-step.active .tl-dot{background:var(--accent);border-color:var(--accent);color:#fff}
+.tl-label{font-size:10px;color:var(--text3);margin-top:5px;text-align:center;line-height:1.3}
+.tl-step.done .tl-label,.tl-step.active .tl-label{color:var(--text2);font-weight:600}
+
+/* TOAST */
+#toast{position:fixed;bottom:20px;right:20px;background:var(--text);color:#fff;padding:11px 16px;border-radius:var(--radius);font-size:13px;font-weight:500;display:flex;align-items:center;gap:9px;z-index:999;box-shadow:var(--shadow-md);transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);max-width:340px}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.success{background:#14532d}
+#toast.error{background:#7f1d1d}
+#toast.info{background:#1e3a5f}
+
+/* TABS */
+.tabs{display:flex;gap:2px;margin-bottom:14px;background:var(--surface2);padding:4px;border-radius:var(--radius);border:1px solid var(--border);width:fit-content}
+.tab-btn{padding:6px 14px;border:none;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;background:transparent;color:var(--text2);transition:all .15s}
+.tab-btn.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
+
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="logo">
+    <div class="logo-icon">🏥</div>
+    MaxtonRCM <small>Revenue Cycle Management</small>
+  </div>
+  <div class="topbar-right">
+    <div class="user-pill">
+      <div class="avatar">BA</div>
+      Billing Admin
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-label">RCM Workflow</div>
+  <button class="sidebar-link active" onclick="showPage('dashboard')" data-testid="nav-dashboard"><span class="icon">📊</span> Dashboard</button>
+  <button class="sidebar-link" onclick="showPage('patients')" data-testid="nav-patients"><span class="icon">🧑‍⚕️</span> Patient Registration</button>
+  <button class="sidebar-link" onclick="showPage('insurance')" data-testid="nav-insurance"><span class="icon">🛡️</span> Insurance Verification <span class="badge-count" id="sb-ins">0</span></button>
+  <button class="sidebar-link" onclick="showPage('claims')" data-testid="nav-claims"><span class="icon">📋</span> Claims Management <span class="badge-count" id="sb-claims">0</span></button>
+  <button class="sidebar-link" onclick="showPage('ar')" data-testid="nav-ar"><span class="icon">📞</span> AR Calling <span class="badge-count" id="sb-ar">0</span></button>
+  <button class="sidebar-link" onclick="showPage('payments')" data-testid="nav-payments"><span class="icon">💰</span> Payment Posting</button>
+  <button class="sidebar-link" onclick="showPage('denials')" data-testid="nav-denials"><span class="icon">❌</span> Denial Management <span class="badge-count" id="sb-denials">0</span></button>
+  <div class="sidebar-label">Reports</div>
+  <button class="sidebar-link" onclick="showPage('reports')" data-testid="nav-reports"><span class="icon">📈</span> AR Dashboard</button>
+</aside>
+
+<main class="main">
+
+<!-- ═══ DASHBOARD ═══ -->
+<div class="page active" id="page-dashboard">
+  <div class="page-header">
+    <div><div class="page-title">RCM Dashboard</div><div class="page-subtitle">Revenue Cycle Overview — Maxton Technology</div></div>
+  </div>
+  <div class="stats">
+    <div class="stat-card"><div class="stat-top"><div class="stat-label">Registered Patients</div><div class="stat-icon blue-bg">🧑‍⚕️</div></div><div class="stat-val blue" id="st-patients">0</div></div>
+    <div class="stat-card"><div class="stat-top"><div class="stat-label">Pending Verifications</div><div class="stat-icon yellow-bg">🛡️</div></div><div class="stat-val yellow" id="st-verif">0</div></div>
+    <div class="stat-card"><div class="stat-top"><div class="stat-label">Claims Submitted</div><div class="stat-icon blue-bg">📋</div></div><div class="stat-val blue" id="st-claims">0</div></div>
+    <div class="stat-card"><div class="stat-top"><div class="stat-label">Denied Claims</div><div class="stat-icon red-bg">❌</div></div><div class="stat-val red" id="st-denied">0</div></div>
+  </div>
+  <div class="stats">
+    <div class="stat-card"><div class="stat-top"><div class="stat-label">Payments Received (₹)</div><div class="stat-icon green-bg">💰</div></div><div class="stat-val green" id="st-payments">0</div></div>
+    <div class="stat-card"><div class="stat-top"><div class="stat-label">Outstanding AR (₹)</div><div class="stat-icon red-bg">⏳</div></div><div class="stat-val red" id="st-ar">0</div></div>
+    <div class="stat-card"><div class="stat-top"><div class="stat-label">AR Calls Today</div><div class="stat-icon yellow-bg">📞</div></div><div class="stat-val yellow" id="st-calls">0</div></div>
+    <div class="stat-card"><div class="stat-top"><div class="stat-label">Appeals Filed</div><div class="stat-icon purple-bg">📝</div></div><div class="stat-val purple" id="st-appeals">0</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">⚡ Recent Activity</div></div>
+    <table>
+      <thead><tr><th>Module</th><th>Activity</th><th>Count</th><th>Action</th></tr></thead>
+      <tbody id="dash-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ PATIENT REGISTRATION ═══ -->
+<div class="page" id="page-patients">
+  <div class="page-header">
+    <div><div class="page-title">Patient Registration</div><div class="page-subtitle">Register new patients and manage demographics</div></div>
+    <button class="btn primary" onclick="openModal('patient-modal')" data-testid="register-patient-btn">➕ Register Patient</button>
+  </div>
+  <div class="search-row">
+    <input class="search-input" type="text" id="patient-search" data-testid="patient-search" placeholder="Search by patient ID, name or DOB..." oninput="renderPatients()">
+  </div>
+  <div class="card">
+    <table>
+      <thead><tr><th style="width:12%">Patient ID</th><th style="width:18%">Patient Name</th><th style="width:10%">DOB</th><th style="width:10%">Gender</th><th style="width:18%">Insurance</th><th style="width:14%">Phone</th><th style="width:9%">Status</th><th style="width:9%">Actions</th></tr></thead>
+      <tbody id="patient-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ INSURANCE VERIFICATION ═══ -->
+<div class="page" id="page-insurance">
+  <div class="page-header">
+    <div><div class="page-title">Insurance Verification</div><div class="page-subtitle">Verify patient eligibility before claim submission</div></div>
+    <button class="btn primary" onclick="openModal('verify-modal')" data-testid="verify-insurance-btn">🛡️ Verify Insurance</button>
+  </div>
+  <div class="search-row">
+    <input class="search-input" type="text" id="insurance-search" data-testid="insurance-search" placeholder="Search by patient name or payer..." oninput="renderInsurance()">
+  </div>
+  <div class="card">
+    <table>
+      <thead><tr><th style="width:12%">Patient ID</th><th style="width:18%">Patient Name</th><th style="width:18%">Payer / Insurer</th><th style="width:14%">Policy No.</th><th style="width:12%">Coverage %</th><th style="width:13%">Valid Until</th><th style="width:13%">Status</th></tr></thead>
+      <tbody id="insurance-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ CLAIMS MANAGEMENT ═══ -->
+<div class="page" id="page-claims">
+  <div class="page-header">
+    <div><div class="page-title">Claims Management</div><div class="page-subtitle">Create, submit and track insurance claims</div></div>
+    <button class="btn primary" onclick="openModal('claim-modal')" data-testid="create-claim-btn">➕ Create Claim</button>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="filterClaims('all',this)" data-testid="tab-all">All Claims</button>
+    <button class="tab-btn" onclick="filterClaims('Pending',this)" data-testid="tab-pending">Pending</button>
+    <button class="tab-btn" onclick="filterClaims('Submitted',this)" data-testid="tab-submitted">Submitted</button>
+    <button class="tab-btn" onclick="filterClaims('Approved',this)" data-testid="tab-approved">Approved</button>
+    <button class="tab-btn" onclick="filterClaims('Denied',this)" data-testid="tab-denied">Denied</button>
+  </div>
+  <div class="search-row">
+    <input class="search-input" type="text" id="claim-search" data-testid="claim-search" placeholder="Search by claim ID, patient or payer..." oninput="renderClaims()">
+  </div>
+  <div class="card">
+    <table>
+      <thead><tr><th style="width:13%">Claim ID</th><th style="width:16%">Patient</th><th style="width:16%">Payer</th><th style="width:12%">CPT Code</th><th style="width:10%">Amount</th><th style="width:11%">DOS</th><th style="width:10%">Status</th><th style="width:12%">Actions</th></tr></thead>
+      <tbody id="claim-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ AR CALLING ═══ -->
+<div class="page" id="page-ar">
+  <div class="page-header">
+    <div><div class="page-title">AR Calling</div><div class="page-subtitle">Follow up on outstanding and denied claims</div></div>
+    <button class="btn primary" onclick="openModal('call-modal')" data-testid="log-call-btn">📞 Log AR Call</button>
+  </div>
+  <div class="search-row">
+    <input class="search-input" type="text" id="ar-search" data-testid="ar-search" placeholder="Search by claim ID or payer..." oninput="renderAR()">
+  </div>
+  <div class="card">
+    <table>
+      <thead><tr><th style="width:13%">Call ID</th><th style="width:13%">Claim ID</th><th style="width:16%">Payer</th><th style="width:14%">Call Date</th><th style="width:16%">Agent</th><th style="width:14%">Outcome</th><th style="width:14%">Follow-up</th></tr></thead>
+      <tbody id="ar-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ PAYMENT POSTING ═══ -->
+<div class="page" id="page-payments">
+  <div class="page-header">
+    <div><div class="page-title">Payment Posting</div><div class="page-subtitle">Post ERA/EOB payments against claims</div></div>
+    <button class="btn primary" onclick="openModal('payment-modal')" data-testid="post-payment-btn">💰 Post Payment</button>
+  </div>
+  <div class="search-row">
+    <input class="search-input" type="text" id="payment-search" data-testid="payment-search" placeholder="Search by claim ID or patient..." oninput="renderPayments()">
+  </div>
+  <div class="card">
+    <table>
+      <thead><tr><th style="width:13%">Payment ID</th><th style="width:13%">Claim ID</th><th style="width:16%">Patient</th><th style="width:13%">Payer</th><th style="width:11%">Charged</th><th style="width:10%">Paid</th><th style="width:11%">Balance</th><th style="width:13%">Status</th></tr></thead>
+      <tbody id="payment-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ DENIAL MANAGEMENT ═══ -->
+<div class="page" id="page-denials">
+  <div class="page-header">
+    <div><div class="page-title">Denial Management</div><div class="page-subtitle">Manage denied claims and file appeals</div></div>
+    <button class="btn primary" onclick="openModal('appeal-modal')" data-testid="file-appeal-btn">📝 File Appeal</button>
+  </div>
+  <div class="search-row">
+    <input class="search-input" type="text" id="denial-search" data-testid="denial-search" placeholder="Search by claim ID or denial reason..." oninput="renderDenials()">
+  </div>
+  <div class="card">
+    <table>
+      <thead><tr><th style="width:13%">Claim ID</th><th style="width:16%">Patient</th><th style="width:16%">Payer</th><th style="width:10%">Amount</th><th style="width:20%">Denial Reason</th><th style="width:12%">Denial Date</th><th style="width:13%">Status</th></tr></thead>
+      <tbody id="denial-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ AR DASHBOARD / REPORTS ═══ -->
+<div class="page" id="page-reports">
+  <div class="page-header">
+    <div><div class="page-title">AR Dashboard</div><div class="page-subtitle">Ageing analysis and revenue reports</div></div>
+  </div>
+  <div class="stats">
+    <div class="stat-card"><div class="stat-top"><div class="stat-label">0–30 Days AR</div><div class="stat-icon green-bg">📅</div></div><div class="stat-val green" id="ar-0-30">₹0</div></div>
+    <div class="stat-card"><div class="stat-top"><div class="stat-label">31–60 Days AR</div><div class="stat-icon yellow-bg">📅</div></div><div class="stat-val yellow" id="ar-31-60">₹0</div></div>
+    <div class="stat-card"><div class="stat-top"><div class="stat-label">61–90 Days AR</div><div class="stat-icon red-bg">📅</div></div><div class="stat-val red" id="ar-61-90">₹0</div></div>
+    <div class="stat-card"><div class="stat-top"><div class="stat-label">90+ Days AR</div><div class="stat-icon red-bg">⚠️</div></div><div class="stat-val red" id="ar-90plus">₹0</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">📊 Payer-wise AR Breakdown</div></div>
+    <table>
+      <thead><tr><th>Payer</th><th>Total Claims</th><th>Total Charged (₹)</th><th>Total Paid (₹)</th><th>Outstanding (₹)</th><th>Denial Rate</th></tr></thead>
+      <tbody id="report-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+</main>
+</div>
+
+<!-- ═══════════════ MODALS ═══════════════ -->
+
+<!-- PATIENT MODAL -->
+<div class="modal-overlay" id="patient-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🧑‍⚕️ Register New Patient</div>
+      <button class="modal-close" onclick="closeModal('patient-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-box">Patient demographics are required for insurance verification and claim submission.</div>
+      <div class="form-grid">
+        <div class="form-group"><label>First Name <span class="req">*</span></label><input type="text" id="p-fname" data-testid="first-name" placeholder="First name"><div class="field-error" id="err-p-fname">Required</div></div>
+        <div class="form-group"><label>Last Name <span class="req">*</span></label><input type="text" id="p-lname" data-testid="last-name" placeholder="Last name"><div class="field-error" id="err-p-lname">Required</div></div>
+        <div class="form-group"><label>Date of Birth <span class="req">*</span></label><input type="date" id="p-dob" data-testid="dob"><div class="field-error" id="err-p-dob">Required</div></div>
+        <div class="form-group"><label>Gender <span class="req">*</span></label>
+          <select id="p-gender" data-testid="gender">
+            <option value="">— Select —</option><option>Male</option><option>Female</option><option>Other</option>
+          </select><div class="field-error" id="err-p-gender">Required</div>
+        </div>
+        <div class="form-group"><label>Phone <span class="req">*</span></label><input type="tel" id="p-phone" data-testid="phone" placeholder="+91-9XXXXXXXXX"><div class="field-error" id="err-p-phone">Required</div></div>
+        <div class="form-group"><label>Email</label><input type="email" id="p-email" data-testid="email" placeholder="patient@email.com"></div>
+        <div class="form-group full"><label>Address</label><input type="text" id="p-addr" data-testid="address" placeholder="Full address"></div>
+        <div class="form-group"><label>Insurance Provider <span class="req">*</span></label>
+          <select id="p-ins" data-testid="insurance-provider">
+            <option value="">— Select —</option>
+            <option>Star Health Insurance</option><option>United Health Care</option><option>HDFC ERGO</option>
+            <option>Max Bupa</option><option>Aetna</option><option>BCBS</option><option>Medicare</option><option>Medicaid</option>
+          </select><div class="field-error" id="err-p-ins">Required</div>
+        </div>
+        <div class="form-group"><label>Policy Number <span class="req">*</span></label><input type="text" id="p-policy" data-testid="patient-policy-number" placeholder="POL-XXXXXXXX"><div class="field-error" id="err-p-policy">Required</div></div>
+        <div class="form-group"><label>Referring Physician</label><input type="text" id="p-physician" data-testid="referring-physician" placeholder="Dr. Name"></div>
+        <div class="form-group"><label>Admission Date</label><input type="date" id="p-admit" data-testid="admission-date"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('patient-modal')">Cancel</button>
+      <button class="btn primary" onclick="savePatient()" data-testid="save-patient-btn">Register Patient</button>
+    </div>
+  </div>
+</div>
+
+<!-- INSURANCE VERIFY MODAL -->
+<div class="modal-overlay" id="verify-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🛡️ Verify Insurance Eligibility</div>
+      <button class="modal-close" onclick="closeModal('verify-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full"><label>Select Patient <span class="req">*</span></label>
+          <select id="v-patient" data-testid="select-patient">
+            <option value="">— Select patient —</option>
+          </select><div class="field-error" id="err-v-patient">Required</div>
+        </div>
+        <div class="form-group"><label>Payer / Insurer <span class="req">*</span></label><input type="text" id="v-payer" data-testid="payer-name" placeholder="e.g. Star Health Insurance"><div class="field-error" id="err-v-payer">Required</div></div>
+        <div class="form-group"><label>Policy Number <span class="req">*</span></label><input type="text" id="v-policy" data-testid="verify-policy-number" placeholder="POL-XXXXXXXX"><div class="field-error" id="err-v-policy">Required</div></div>
+        <div class="form-group"><label>Coverage % <span class="req">*</span></label><input type="number" id="v-coverage" data-testid="coverage-percent" placeholder="80" min="0" max="100"><div class="field-error" id="err-v-coverage">Required</div></div>
+        <div class="form-group"><label>Valid Until <span class="req">*</span></label><input type="date" id="v-valid" data-testid="valid-until"><div class="field-error" id="err-v-valid">Required</div></div>
+        <div class="form-group"><label>Co-pay (₹)</label><input type="number" id="v-copay" data-testid="co-pay" placeholder="0"></div>
+        <div class="form-group"><label>Deductible (₹)</label><input type="number" id="v-deductible" data-testid="deductible" placeholder="0"></div>
+        <div class="form-group"><label>Verification Status <span class="req">*</span></label>
+          <select id="v-status" data-testid="verification-status">
+            <option value="">— Select —</option><option>Verified</option><option>Failed</option><option>Pending</option>
+          </select><div class="field-error" id="err-v-status">Required</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('verify-modal')">Cancel</button>
+      <button class="btn primary" onclick="saveVerification()" data-testid="save-verification-btn">Save Verification</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLAIM MODAL -->
+<div class="modal-overlay" id="claim-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">📋 Create Insurance Claim</div>
+      <button class="modal-close" onclick="closeModal('claim-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full"><label>Patient <span class="req">*</span></label>
+          <select id="c-patient" data-testid="claim-patient" onchange="autofillClaim()">
+            <option value="">— Select patient —</option>
+          </select><div class="field-error" id="err-c-patient">Required</div>
+        </div>
+        <div class="form-group"><label>Payer / Insurer <span class="req">*</span></label><input type="text" id="c-payer" data-testid="claim-payer" placeholder="Auto-filled from patient"><div class="field-error" id="err-c-payer">Required</div></div>
+        <div class="form-group"><label>CPT Code <span class="req">*</span></label>
+          <select id="c-cpt" data-testid="cpt-code">
+            <option value="">— Select CPT —</option>
+            <option value="99213">99213 — Office Visit (Level 3)</option>
+            <option value="99214">99214 — Office Visit (Level 4)</option>
+            <option value="99232">99232 — Subsequent Hospital Care</option>
+            <option value="93000">93000 — ECG with Interpretation</option>
+            <option value="71046">71046 — Chest X-Ray (2 views)</option>
+            <option value="80053">80053 — Comprehensive Metabolic Panel</option>
+            <option value="27447">27447 — Total Knee Replacement</option>
+            <option value="33533">33533 — Coronary Artery Bypass</option>
+          </select><div class="field-error" id="err-c-cpt">Required</div>
+        </div>
+        <div class="form-group"><label>ICD-10 Diagnosis Code <span class="req">*</span></label>
+          <select id="c-icd" data-testid="icd-code">
+            <option value="">— Select ICD-10 —</option>
+            <option value="J18.9">J18.9 — Pneumonia</option>
+            <option value="I10">I10 — Essential Hypertension</option>
+            <option value="E11.9">E11.9 — Type 2 Diabetes</option>
+            <option value="M17.11">M17.11 — Primary Osteoarthritis Knee</option>
+            <option value="I25.10">I25.10 — Ischaemic Heart Disease</option>
+            <option value="Z00.00">Z00.00 — General Adult Medical Exam</option>
+          </select><div class="field-error" id="err-c-icd">Required</div>
+        </div>
+        <div class="form-group"><label>Date of Service <span class="req">*</span></label><input type="date" id="c-dos" data-testid="date-of-service"><div class="field-error" id="err-c-dos">Required</div></div>
+        <div class="form-group"><label>Charge Amount (₹) <span class="req">*</span></label><input type="number" id="c-amount" data-testid="charge-amount" placeholder="0"><div class="field-error" id="err-c-amount">Required</div></div>
+        <div class="form-group"><label>Rendering Provider <span class="req">*</span></label>
+          <select id="c-provider" data-testid="rendering-provider">
+            <option value="">— Select provider —</option>
+            <option>Dr. Ramesh Iyer (Cardiology)</option><option>Dr. Anita Sharma (General Medicine)</option>
+            <option>Dr. Suresh Nair (Orthopaedics)</option><option>Dr. Priya Menon (Radiology)</option>
+          </select><div class="field-error" id="err-c-provider">Required</div>
+        </div>
+        <div class="form-group"><label>Place of Service</label>
+          <select id="c-pos" data-testid="place-of-service">
+            <option>11 — Office</option><option>21 — Inpatient Hospital</option><option>22 — Outpatient Hospital</option><option>23 — Emergency Room</option>
+          </select>
+        </div>
+        <div class="form-group full"><label>Clinical Notes</label><input type="text" id="c-notes" data-testid="clinical-notes" placeholder="Brief clinical summary"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('claim-modal')">Cancel</button>
+      <button class="btn warning" onclick="saveClaim('Pending')" data-testid="save-draft-claim-btn">💾 Save Draft</button>
+      <button class="btn primary" onclick="saveClaim('Submitted')" data-testid="submit-claim-btn">📤 Submit Claim</button>
+    </div>
+  </div>
+</div>
+
+<!-- AR CALL MODAL -->
+<div class="modal-overlay" id="call-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">📞 Log AR Call</div>
+      <button class="modal-close" onclick="closeModal('call-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group"><label>Claim ID <span class="req">*</span></label>
+          <select id="ar-claim" data-testid="ar-claim-id">
+            <option value="">— Select claim —</option>
+          </select><div class="field-error" id="err-ar-claim">Required</div>
+        </div>
+        <div class="form-group"><label>Payer Called <span class="req">*</span></label><input type="text" id="ar-payer" data-testid="ar-payer" placeholder="Payer name"><div class="field-error" id="err-ar-payer">Required</div></div>
+        <div class="form-group"><label>Call Date <span class="req">*</span></label><input type="date" id="ar-date" data-testid="ar-call-date"><div class="field-error" id="err-ar-date">Required</div></div>
+        <div class="form-group"><label>Agent Name <span class="req">*</span></label><input type="text" id="ar-agent" data-testid="ar-agent" placeholder="Agent name"><div class="field-error" id="err-ar-agent">Required</div></div>
+        <div class="form-group"><label>Call Outcome <span class="req">*</span></label>
+          <select id="ar-outcome" data-testid="ar-outcome">
+            <option value="">— Select outcome —</option>
+            <option>Claim in process</option><option>Additional info requested</option>
+            <option>Claim approved — awaiting payment</option><option>Claim denied</option>
+            <option>Will resubmit</option><option>Escalated to supervisor</option>
+          </select><div class="field-error" id="err-ar-outcome">Required</div>
+        </div>
+        <div class="form-group"><label>Follow-up Date</label><input type="date" id="ar-followup" data-testid="ar-followup-date"></div>
+        <div class="form-group full"><label>Call Notes</label><input type="text" id="ar-notes" data-testid="ar-notes" placeholder="Summary of call..."></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('call-modal')">Cancel</button>
+      <button class="btn primary" onclick="saveARCall()" data-testid="save-call-btn">Log Call</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="payment-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">💰 Post Payment (ERA/EOB)</div>
+      <button class="modal-close" onclick="closeModal('payment-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full"><label>Claim ID <span class="req">*</span></label>
+          <select id="pay-claim" data-testid="pay-claim-id" onchange="autofillPayment()">
+            <option value="">— Select claim —</option>
+          </select><div class="field-error" id="err-pay-claim">Required</div>
+        </div>
+        <div class="form-group"><label>Patient Name</label><input type="text" id="pay-patient" data-testid="pay-patient" readonly></div>
+        <div class="form-group"><label>Payer</label><input type="text" id="pay-payer" data-testid="pay-payer" readonly></div>
+        <div class="form-group"><label>Charged Amount (₹)</label><input type="text" id="pay-charged" data-testid="pay-charged" readonly></div>
+        <div class="form-group"><label>Paid Amount (₹) <span class="req">*</span></label><input type="number" id="pay-amount" data-testid="pay-amount" placeholder="0" oninput="calcBalance()"><div class="field-error" id="err-pay-amount">Required</div></div>
+        <div class="form-group"><label>Balance (₹)</label><input type="text" id="pay-balance" data-testid="pay-balance" readonly></div>
+        <div class="form-group"><label>Payment Type</label>
+          <select id="pay-type" data-testid="payment-type">
+            <option>Insurance Payment</option><option>Patient Co-pay</option><option>Partial Payment</option><option>Write-off</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Payment Date <span class="req">*</span></label><input type="date" id="pay-date" data-testid="payment-date"><div class="field-error" id="err-pay-date">Required</div></div>
+        <div class="form-group"><label>Check / EFT Number</label><input type="text" id="pay-ref" data-testid="pay-reference" placeholder="CHK-XXXXX or EFT-XXXXX"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('payment-modal')">Cancel</button>
+      <button class="btn primary" onclick="savePayment()" data-testid="post-payment-confirm-btn">Post Payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- APPEAL MODAL -->
+<div class="modal-overlay" id="appeal-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">📝 File Denial Appeal</div>
+      <button class="modal-close" onclick="closeModal('appeal-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full"><label>Denied Claim <span class="req">*</span></label>
+          <select id="app-claim" data-testid="appeal-claim-id">
+            <option value="">— Select denied claim —</option>
+          </select><div class="field-error" id="err-app-claim">Required</div>
+        </div>
+        <div class="form-group"><label>Appeal Type <span class="req">*</span></label>
+          <select id="app-type" data-testid="appeal-type">
+            <option value="">— Select —</option>
+            <option>Medical Necessity</option><option>Coding Error</option><option>Eligibility Issue</option>
+            <option>Prior Auth Missing</option><option>Timely Filing</option><option>Duplicate Claim</option>
+          </select><div class="field-error" id="err-app-type">Required</div>
+        </div>
+        <div class="form-group"><label>Appeal Date <span class="req">*</span></label><input type="date" id="app-date" data-testid="appeal-date"><div class="field-error" id="err-app-date">Required</div></div>
+        <div class="form-group full"><label>Appeal Justification <span class="req">*</span></label>
+          <textarea id="app-notes" data-testid="appeal-notes" rows="3" placeholder="Explain why this denial should be reversed..."></textarea>
+          <div class="field-error" id="err-app-notes">Required</div>
+        </div>
+        <div class="form-group"><label>Supporting Docs</label>
+          <select id="app-docs" data-testid="supporting-docs">
+            <option>Medical Records</option><option>Prior Auth Letter</option><option>Physician Letter of Necessity</option><option>EOB Copy</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('appeal-modal')">Cancel</button>
+      <button class="btn primary" onclick="saveAppeal()" data-testid="submit-appeal-btn">Submit Appeal</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"><span id="toast-icon"></span><span id="toast-msg"></span></div>
+
+<script>
+/* ════════════ DATA ════════════ */
+let patients = [
+  {id:'PAT-001',fname:'Ravi',lname:'Kumar',dob:'1978-05-12',gender:'Male',phone:'+91-9876500001',email:'ravi@email.com',addr:'Bangalore',insurance:'Star Health Insurance',policy:'POL-SH001234',physician:'Dr. Ramesh Iyer',admit:'2024-10-15',status:'Active'},
+  {id:'PAT-002',fname:'Sunita',lname:'Reddy',dob:'1965-11-22',gender:'Female',phone:'+91-9876500002',email:'sunita@email.com',addr:'Bangalore',insurance:'United Health Care',policy:'POL-UHC005678',physician:'Dr. Anita Sharma',admit:'2024-11-01',status:'Active'},
+  {id:'PAT-003',fname:'Mohammed',lname:'Aslam',dob:'1990-03-08',gender:'Male',phone:'+91-9876500003',email:'aslam@email.com',addr:'Mysore',insurance:'HDFC ERGO',policy:'POL-HE009012',physician:'Dr. Suresh Nair',admit:'2024-11-10',status:'Active'},
+  {id:'PAT-004',fname:'Lakshmi',lname:'Nair',dob:'1955-07-30',gender:'Female',phone:'+91-9876500004',email:'lakshmi@email.com',addr:'Chennai',insurance:'Medicare',policy:'POL-MC003456',physician:'Dr. Priya Menon',admit:'2024-09-20',status:'Inactive'},
+];
+
+let verifications = [
+  {pid:'PAT-001',patient:'Ravi Kumar',payer:'Star Health Insurance',policy:'POL-SH001234',coverage:80,validUntil:'2025-12-31',copay:500,deductible:2000,status:'Verified'},
+  {pid:'PAT-002',patient:'Sunita Reddy',payer:'United Health Care',policy:'POL-UHC005678',coverage:90,validUntil:'2025-06-30',copay:300,deductible:1500,status:'Verified'},
+  {pid:'PAT-003',patient:'Mohammed Aslam',payer:'HDFC ERGO',policy:'POL-HE009012',coverage:70,validUntil:'2024-12-15',copay:800,deductible:3000,status:'Pending'},
+  {pid:'PAT-004',patient:'Lakshmi Nair',payer:'Medicare',policy:'POL-MC003456',coverage:80,validUntil:'2023-12-31',copay:0,deductible:0,status:'Failed'},
+];
+
+let claims = [
+  {id:'CLM-2024-001',pid:'PAT-001',patient:'Ravi Kumar',payer:'Star Health Insurance',cpt:'99213',icd:'I10',dos:'2024-10-16',amount:3500,provider:'Dr. Ramesh Iyer (Cardiology)',pos:'21 — Inpatient Hospital',notes:'Hypertension follow-up',status:'Approved'},
+  {id:'CLM-2024-002',pid:'PAT-002',patient:'Sunita Reddy',payer:'United Health Care',cpt:'80053',icd:'E11.9',dos:'2024-11-02',amount:2800,provider:'Dr. Anita Sharma (General Medicine)',pos:'11 — Office',notes:'Diabetic screening panel',status:'Submitted'},
+  {id:'CLM-2024-003',pid:'PAT-003',patient:'Mohammed Aslam',payer:'HDFC ERGO',cpt:'27447',icd:'M17.11',dos:'2024-11-11',amount:85000,provider:'Dr. Suresh Nair (Orthopaedics)',pos:'21 — Inpatient Hospital',notes:'Total knee replacement',status:'Denied'},
+  {id:'CLM-2024-004',pid:'PAT-001',patient:'Ravi Kumar',payer:'Star Health Insurance',cpt:'93000',icd:'I25.10',dos:'2024-10-20',amount:1800,provider:'Dr. Ramesh Iyer (Cardiology)',pos:'22 — Outpatient Hospital',notes:'ECG monitoring',status:'Pending'},
+  {id:'CLM-2024-005',pid:'PAT-004',patient:'Lakshmi Nair',payer:'Medicare',cpt:'71046',icd:'J18.9',dos:'2024-09-21',amount:4200,provider:'Dr. Priya Menon (Radiology)',pos:'23 — Emergency Room',notes:'Pneumonia — chest X-ray',status:'Denied'},
+];
+
+let arCalls = [
+  {id:'ARC-001',claimId:'CLM-2024-002',payer:'United Health Care',date:'2024-11-10',agent:'Priya R.',outcome:'Claim in process',followup:'2024-11-20',notes:'Claim acknowledged, processing time 15 days'},
+  {id:'ARC-002',claimId:'CLM-2024-003',payer:'HDFC ERGO',date:'2024-11-15',agent:'Suresh K.',outcome:'Additional info requested',followup:'2024-11-22',notes:'Prior auth required for knee replacement'},
+];
+
+let payments = [
+  {id:'PAY-001',claimId:'CLM-2024-001',patient:'Ravi Kumar',payer:'Star Health Insurance',charged:3500,paid:2800,balance:700,type:'Insurance Payment',date:'2024-11-05',ref:'EFT-001234',status:'Paid'},
+];
+
+let denials = [
+  {claimId:'CLM-2024-003',patient:'Mohammed Aslam',payer:'HDFC ERGO',amount:85000,reason:'Prior Authorization Missing',date:'2024-11-20',status:'Pending'},
+  {claimId:'CLM-2024-005',patient:'Lakshmi Nair',payer:'Medicare',amount:4200,reason:'Timely Filing Limit Exceeded',date:'2024-10-15',status:'Appealed'},
+];
+
+let claimFilter = 'all';
+let patCounter = 5, clmCounter = 6, arcCounter = 3, payCounter = 2;
+
+/* ════════════ NAV ════════════ */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelector(`[onclick="showPage('${id}')"]`).classList.add('active');
+  const r={dashboard:renderDashboard,patients:renderPatients,insurance:renderInsurance,claims:renderClaims,ar:renderAR,payments:renderPayments,denials:renderDenials,reports:renderReports};
+  if(r[id]) r[id]();
+}
+
+/* ════════════ MODAL ════════════ */
+function openModal(id) {
+  if(['claim-modal','call-modal','payment-modal'].includes(id)) populateDropdowns();
+  if(id==='verify-modal') populatePatientDropdowns();
+  if(id==='appeal-modal') populateAppealDropdown();
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.getElementById(id).querySelectorAll('input,select,textarea').forEach(el=>{
+    if(el.tagName==='SELECT') el.selectedIndex=0; else el.value='';
+  });
+  document.querySelectorAll('.field-error').forEach(e=>e.classList.remove('show'));
+}
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); });
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open')); });
+
+function populateDropdowns() {
+  // Patient selects in claim / call / payment modals
+  ['c-patient','pay-claim','ar-claim'].forEach(sid=>{
+    const s = document.getElementById(sid); if(!s) return;
+    if(sid==='c-patient') {
+      s.innerHTML='<option value="">— Select patient —</option>';
+      patients.filter(p=>p.status==='Active').forEach(p=>{
+        const o=document.createElement('option'); o.value=p.id; o.textContent=`${p.id} — ${p.fname} ${p.lname}`;
+        s.appendChild(o);
+      });
+    } else {
+      const label = null; // show all claims in both payment and AR dropdowns
+      s.innerHTML='<option value="">— Select claim —</option>';
+      claims.filter(c=>!label||c.status===label).forEach(c=>{
+        const o=document.createElement('option'); o.value=c.id; o.textContent=`${c.id} — ${c.patient}`;
+        s.appendChild(o);
+      });
+    }
+  });
+}
+function populatePatientDropdowns() {
+  const s=document.getElementById('v-patient'); if(!s) return;
+  s.innerHTML='<option value="">— Select patient —</option>';
+  patients.forEach(p=>{
+    const o=document.createElement('option'); o.value=p.id; o.textContent=`${p.id} — ${p.fname} ${p.lname}`;
+    s.appendChild(o);
+  });
+}
+function populateAppealDropdown() {
+  const s=document.getElementById('app-claim'); if(!s) return;
+  s.innerHTML='<option value="">— Select denied claim —</option>';
+  claims.filter(c=>c.status==='Denied').forEach(c=>{
+    const o=document.createElement('option'); o.value=c.id; o.textContent=`${c.id} — ${c.patient}`;
+    s.appendChild(o);
+  });
+}
+function autofillClaim() {
+  const pid=document.getElementById('c-patient').value;
+  const p=patients.find(x=>x.id===pid);
+  if(p) document.getElementById('c-payer').value=p.insurance;
+}
+function autofillPayment() {
+  const cid=document.getElementById('pay-claim').value;
+  const c=claims.find(x=>x.id===cid);
+  if(c) {
+    document.getElementById('pay-patient').value=c.patient;
+    document.getElementById('pay-payer').value=c.payer;
+    document.getElementById('pay-charged').value='₹'+c.amount.toLocaleString('en-IN');
+    document.getElementById('pay-balance').value='₹'+c.amount.toLocaleString('en-IN');
+  }
+}
+function calcBalance() {
+  const claimId=document.getElementById('pay-claim').value;
+  const c=claims.find(x=>x.id===claimId);
+  const paid=parseFloat(document.getElementById('pay-amount').value)||0;
+  if(c) document.getElementById('pay-balance').value='₹'+(c.amount-paid).toLocaleString('en-IN');
+}
+
+/* ════════════ VALIDATION ════════════ */
+function req(id,errId) {
+  const v=document.getElementById(id).value.trim();
+  const e=document.getElementById(errId);
+  if(!v){e.classList.add('show');return false;}
+  e.classList.remove('show');return true;
+}
+
+/* ════════════ TOAST ════════════ */
+let toastT;
+function toast(msg,type='success') {
+  const t=document.getElementById('toast');
+  document.getElementById('toast-msg').textContent=msg;
+  document.getElementById('toast-icon').textContent=type==='success'?'✓ ':type==='error'?'✗ ':'ℹ ';
+  t.className=''+type+' show';
+  clearTimeout(toastT);
+  toastT=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+/* ════════════ BADGE ════════════ */
+function badge(text,cls){return `<span class="badge b-${cls}" data-testid="status-badge">${text}</span>`;}
+function statusBadge(s){
+  const m={
+    'New':['New','new'],'Verified':['Verified','verified'],'Failed':['Failed','failed'],
+    'Pending':['Pending','pending'],'Submitted':['Submitted','submitted'],
+    'Approved':['Approved','approved'],'Denied':['Denied','denied'],
+    'Appealed':['Appealed','appealed'],'Paid':['Paid','paid'],
+    'Partial':['Partial','partial'],'Outstanding':['Outstanding','outstanding'],
+    'Active':['Active','active'],'Inactive':['Inactive','inactive'],
+    'In Progress':['In Progress','inprogress'],'Completed':['Completed','completed'],
+    'Low Stock':['Low Stock','lowstock'],'In Stock':['In Stock','instock']
+  };
+  const[text,cls]=m[s]||[s,'pending'];
+  return badge(text,cls);
+}
+
+/* ════════════ PATIENTS ════════════ */
+function savePatient() {
+  const ok=[req('p-fname','err-p-fname'),req('p-lname','err-p-lname'),req('p-dob','err-p-dob'),req('p-gender','err-p-gender'),req('p-phone','err-p-phone'),req('p-ins','err-p-ins'),req('p-policy','err-p-policy')].every(Boolean);
+  if(!ok){toast('Fill all required fields','error');return;}
+  const id='PAT-00'+patCounter++;
+  patients.unshift({id,fname:document.getElementById('p-fname').value.trim(),lname:document.getElementById('p-lname').value.trim(),dob:document.getElementById('p-dob').value,gender:document.getElementById('p-gender').value,phone:document.getElementById('p-phone').value.trim(),email:document.getElementById('p-email').value.trim(),addr:document.getElementById('p-addr').value.trim(),insurance:document.getElementById('p-ins').value,policy:document.getElementById('p-policy').value.trim(),physician:document.getElementById('p-physician').value.trim(),admit:document.getElementById('p-admit').value,status:'Active'});
+  closeModal('patient-modal');renderPatients();renderDashboard();
+  toast(`Patient ${id} registered successfully`);
+}
+function renderPatients() {
+  const q=(document.getElementById('patient-search').value||'').toLowerCase();
+  const rows=patients.filter(p=>!q||p.id.toLowerCase().includes(q)||(p.fname+' '+p.lname).toLowerCase().includes(q)||p.dob.includes(q));
+  document.getElementById('patient-tbody').innerHTML=rows.length?rows.map(p=>`
+    <tr data-testid="patient-row">
+      <td><code data-testid="patient-id">${p.id}</code></td>
+      <td><strong>${p.fname} ${p.lname}</strong></td>
+      <td>${p.dob}</td>
+      <td>${p.gender}</td>
+      <td style="font-size:12px">${p.insurance}</td>
+      <td>${p.phone}</td>
+      <td>${statusBadge(p.status)}</td>
+      <td><button class="btn sm" onclick="togglePatient('${p.id}')" data-testid="toggle-patient">${p.status==='Active'?'🔴':'🟢'}</button></td>
+    </tr>`).join(''):emptyRow(8,'No patients found');
+}
+function togglePatient(id){const p=patients.find(x=>x.id===id);if(p){p.status=p.status==='Active'?'Inactive':'Active';renderPatients();renderDashboard();toast('Patient status updated');}}
+
+/* ════════════ INSURANCE ════════════ */
+function saveVerification() {
+  const ok=[req('v-patient','err-v-patient'),req('v-payer','err-v-payer'),req('v-policy','err-v-policy'),req('v-coverage','err-v-coverage'),req('v-valid','err-v-valid'),req('v-status','err-v-status')].every(Boolean);
+  if(!ok){toast('Fill all required fields','error');return;}
+  const pid=document.getElementById('v-patient').value;
+  const p=patients.find(x=>x.id===pid);
+  verifications.unshift({pid,patient:p?p.fname+' '+p.lname:'Unknown',payer:document.getElementById('v-payer').value.trim(),policy:document.getElementById('v-policy').value.trim(),coverage:parseInt(document.getElementById('v-coverage').value)||0,validUntil:document.getElementById('v-valid').value,copay:parseInt(document.getElementById('v-copay').value)||0,deductible:parseInt(document.getElementById('v-deductible').value)||0,status:document.getElementById('v-status').value});
+  closeModal('verify-modal');renderInsurance();renderDashboard();
+  toast('Insurance verification saved');
+}
+function renderInsurance() {
+  const q=(document.getElementById('insurance-search').value||'').toLowerCase();
+  const rows=verifications.filter(v=>!q||v.patient.toLowerCase().includes(q)||v.payer.toLowerCase().includes(q));
+  document.getElementById('insurance-tbody').innerHTML=rows.length?rows.map(v=>`
+    <tr data-testid="insurance-row">
+      <td><code>${v.pid}</code></td>
+      <td>${v.patient}</td>
+      <td>${v.payer}</td>
+      <td><code data-testid="policy-number">${v.policy}</code></td>
+      <td>${v.coverage}%</td>
+      <td style="color:${v.validUntil<new Date().toISOString().split('T')[0]?'var(--red)':'inherit'}">${v.validUntil}</td>
+      <td>${statusBadge(v.status)}</td>
+    </tr>`).join(''):emptyRow(7,'No verifications found');
+}
+
+/* ════════════ CLAIMS ════════════ */
+function saveClaim(status) {
+  const ok=[req('c-patient','err-c-patient'),req('c-payer','err-c-payer'),req('c-cpt','err-c-cpt'),req('c-icd','err-c-icd'),req('c-dos','err-c-dos'),req('c-amount','err-c-amount'),req('c-provider','err-c-provider')].every(Boolean);
+  if(!ok){toast('Fill all required fields','error');return;}
+  const pid=document.getElementById('c-patient').value;
+  const p=patients.find(x=>x.id===pid);
+  const id='CLM-2024-00'+clmCounter++;
+  claims.unshift({id,pid,patient:p?p.fname+' '+p.lname:'Unknown',payer:document.getElementById('c-payer').value.trim(),cpt:document.getElementById('c-cpt').value,icd:document.getElementById('c-icd').value,dos:document.getElementById('c-dos').value,amount:parseFloat(document.getElementById('c-amount').value)||0,provider:document.getElementById('c-provider').value,pos:document.getElementById('c-pos').value,notes:document.getElementById('c-notes').value.trim(),status});
+  closeModal('claim-modal');renderClaims();renderDashboard();
+  toast(`Claim ${id} ${status==='Pending'?'saved as draft':'submitted to payer'}`);
+}
+function filterClaims(f,el){
+  claimFilter=f;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderClaims();
+}
+function approveClaim(id){const c=claims.find(x=>x.id===id);if(c){c.status='Approved';renderClaims();renderDashboard();toast(`Claim ${id} approved`);}}
+function denyClaim(id){const c=claims.find(x=>x.id===id);if(c){c.status='Denied';denials.push({claimId:id,patient:c.patient,payer:c.payer,amount:c.amount,reason:'Payer Review Pending',date:new Date().toISOString().split('T')[0],status:'Pending'});renderClaims();renderDenials();renderDashboard();toast(`Claim ${id} denied`,'error');}}
+function renderClaims() {
+  const q=(document.getElementById('claim-search').value||'').toLowerCase();
+  let rows=claims.filter(c=>!q||c.id.toLowerCase().includes(q)||c.patient.toLowerCase().includes(q)||c.payer.toLowerCase().includes(q));
+  if(claimFilter!=='all') rows=rows.filter(c=>c.status===claimFilter);
+  document.getElementById('claim-tbody').innerHTML=rows.length?rows.map(c=>`
+    <tr data-testid="claim-row">
+      <td><code data-testid="claim-id">${c.id}</code></td>
+      <td>${c.patient}</td>
+      <td style="font-size:12px">${c.payer}</td>
+      <td><code>${c.cpt}</code></td>
+      <td>₹${Math.round(c.amount).toLocaleString('en-IN')}</td>
+      <td>${c.dos}</td>
+      <td>${statusBadge(c.status)}</td>
+      <td><div class="btn-group">
+        ${c.status==='Submitted'?`<button class="btn sm success" onclick="approveClaim('${c.id}')" data-testid="approve-claim">✓</button><button class="btn sm danger" onclick="denyClaim('${c.id}')" data-testid="deny-claim">✗</button>`:''}
+      </div></td>
+    </tr>`).join(''):emptyRow(8,'No claims found');
+}
+
+/* ════════════ AR CALLS ════════════ */
+function saveARCall() {
+  const ok=[req('ar-claim','err-ar-claim'),req('ar-payer','err-ar-payer'),req('ar-date','err-ar-date'),req('ar-agent','err-ar-agent'),req('ar-outcome','err-ar-outcome')].every(Boolean);
+  if(!ok){toast('Fill all required fields','error');return;}
+  const id='ARC-00'+arcCounter++;
+  arCalls.unshift({id,claimId:document.getElementById('ar-claim').value,payer:document.getElementById('ar-payer').value.trim(),date:document.getElementById('ar-date').value,agent:document.getElementById('ar-agent').value.trim(),outcome:document.getElementById('ar-outcome').value,followup:document.getElementById('ar-followup').value,notes:document.getElementById('ar-notes').value.trim()});
+  closeModal('call-modal');renderAR();renderDashboard();
+  toast(`AR Call ${id} logged`);
+}
+function renderAR() {
+  const q=(document.getElementById('ar-search').value||'').toLowerCase();
+  const rows=arCalls.filter(a=>!q||a.claimId.toLowerCase().includes(q)||a.payer.toLowerCase().includes(q));
+  document.getElementById('ar-tbody').innerHTML=rows.length?rows.map(a=>`
+    <tr data-testid="ar-row">
+      <td><code>${a.id}</code></td>
+      <td><code data-testid="ar-call-claim-id">${a.claimId}</code></td>
+      <td style="font-size:12px">${a.payer}</td>
+      <td>${a.date}</td>
+      <td>${a.agent}</td>
+      <td style="font-size:12px">${a.outcome}</td>
+      <td>${a.followup||'—'}</td>
+    </tr>`).join(''):emptyRow(7,'No AR calls logged');
+}
+
+/* ════════════ PAYMENTS ════════════ */
+function savePayment() {
+  const ok=[req('pay-claim','err-pay-claim'),req('pay-amount','err-pay-amount'),req('pay-date','err-pay-date')].every(Boolean);
+  if(!ok){toast('Fill all required fields','error');return;}
+  const cid=document.getElementById('pay-claim').value;
+  const c=claims.find(x=>x.id===cid);
+  const paid=parseFloat(document.getElementById('pay-amount').value)||0;
+  const charged=c?c.amount:0;
+  const balance=charged-paid;
+  const id='PAY-00'+payCounter++;
+  payments.unshift({id,claimId:cid,patient:c?c.patient:'Unknown',payer:c?c.payer:'Unknown',charged,paid,balance,type:document.getElementById('pay-type').value,date:document.getElementById('pay-date').value,ref:document.getElementById('pay-ref').value.trim(),status:balance<=0?'Paid':'Partial'});
+  if(c) c.status='Approved';
+  closeModal('payment-modal');renderPayments();renderDashboard();
+  toast(`Payment ${id} posted — Balance: ₹${balance.toLocaleString('en-IN')}`);
+}
+function renderPayments() {
+  const q=(document.getElementById('payment-search').value||'').toLowerCase();
+  const rows=payments.filter(p=>!q||p.claimId.toLowerCase().includes(q)||p.patient.toLowerCase().includes(q));
+  document.getElementById('payment-tbody').innerHTML=rows.length?rows.map(p=>`
+    <tr data-testid="payment-row">
+      <td><code>${p.id}</code></td>
+      <td><code>${p.claimId}</code></td>
+      <td>${p.patient}</td>
+      <td style="font-size:12px">${p.payer}</td>
+      <td>₹${Math.round(p.charged).toLocaleString('en-IN')}</td>
+      <td class="green">₹${Math.round(p.paid).toLocaleString('en-IN')}</td>
+      <td class="${p.balance>0?'red':''}"  >₹${Math.round(p.balance).toLocaleString('en-IN')}</td>
+      <td>${statusBadge(p.status)}</td>
+    </tr>`).join(''):emptyRow(8,'No payments posted');
+}
+
+/* ════════════ DENIALS ════════════ */
+function saveAppeal() {
+  const ok=[req('app-claim','err-app-claim'),req('app-type','err-app-type'),req('app-date','err-app-date'),req('app-notes','err-app-notes')].every(Boolean);
+  if(!ok){toast('Fill all required fields','error');return;}
+  const cid=document.getElementById('app-claim').value;
+  const d=denials.find(x=>x.claimId===cid);
+  if(d) d.status='Appealed';
+  const c=claims.find(x=>x.id===cid);
+  if(c) c.status='Appealed';
+  closeModal('appeal-modal');renderDenials();renderClaims();renderDashboard();
+  toast(`Appeal filed for ${cid}`);
+}
+function renderDenials() {
+  const q=(document.getElementById('denial-search').value||'').toLowerCase();
+  const rows=denials.filter(d=>!q||d.claimId.toLowerCase().includes(q)||d.reason.toLowerCase().includes(q));
+  document.getElementById('denial-tbody').innerHTML=rows.length?rows.map(d=>`
+    <tr data-testid="denial-row" ${d.status==='Pending'?'style="background:#fff8f8"':''}>
+      <td><code data-testid="denied-claim-id">${d.claimId}</code></td>
+      <td>${d.patient}</td>
+      <td style="font-size:12px">${d.payer}</td>
+      <td>₹${Math.round(d.amount).toLocaleString('en-IN')}</td>
+      <td style="font-size:12px;color:var(--red-text)">${d.reason}</td>
+      <td>${d.date}</td>
+      <td>${statusBadge(d.status)}</td>
+    </tr>`).join(''):emptyRow(7,'No denials found');
+}
+
+/* ════════════ DASHBOARD ════════════ */
+function renderDashboard() {
+  document.getElementById('st-patients').textContent=patients.length;
+  document.getElementById('st-verif').textContent=verifications.filter(v=>v.status==='Pending').length;
+  document.getElementById('st-claims').textContent=claims.filter(c=>c.status==='Submitted').length;
+  document.getElementById('st-denied').textContent=claims.filter(c=>c.status==='Denied').length;
+  const totalPaid=payments.reduce((s,p)=>s+p.paid,0);
+  const totalOutstanding=claims.filter(c=>c.status!=='Denied'&&c.status!=='Approved').reduce((s,c)=>s+c.amount,0);
+  document.getElementById('st-payments').textContent='₹'+Math.round(totalPaid).toLocaleString('en-IN');
+  document.getElementById('st-ar').textContent='₹'+Math.round(totalOutstanding).toLocaleString('en-IN');
+  document.getElementById('st-calls').textContent=arCalls.length;
+  document.getElementById('st-appeals').textContent=denials.filter(d=>d.status==='Appealed').length;
+  // Sidebar counts
+  document.getElementById('sb-ins').textContent=verifications.filter(v=>v.status==='Pending').length;
+  document.getElementById('sb-claims').textContent=claims.filter(c=>['Pending','Submitted'].includes(c.status)).length;
+  document.getElementById('sb-ar').textContent=arCalls.length;
+  document.getElementById('sb-denials').textContent=denials.filter(d=>d.status==='Pending').length;
+
+  document.getElementById('dash-tbody').innerHTML=[
+    {m:'Patient Registration',desc:`${patients.filter(p=>p.status==='Active').length} active patients registered`,s:'Active',p:'patients'},
+    {m:'Insurance Verification',desc:`${verifications.filter(v=>v.status==='Pending').length} verifications pending`,s:'Pending',p:'insurance'},
+    {m:'Claims Management',desc:`${claims.filter(c=>c.status==='Submitted').length} claims awaiting decision`,s:'Submitted',p:'claims'},
+    {m:'Denial Management',desc:`${denials.filter(d=>d.status==='Pending').length} denials need attention`,s:'Pending',p:'denials'},
+  ].map(r=>`<tr><td><strong>${r.m}</strong></td><td style="color:var(--text2)">${r.desc}</td><td>${statusBadge(r.s)}</td><td><button class="btn sm" onclick="showPage('${r.p}')">View →</button></td></tr>`).join('');
+}
+
+/* ════════════ REPORTS ════════════ */
+function renderReports() {
+  document.getElementById('ar-0-30').textContent='₹'+Math.round(claims.filter(c=>c.status==='Submitted').reduce((s,c)=>s+c.amount,0)*0.5).toLocaleString('en-IN');
+  document.getElementById('ar-31-60').textContent='₹'+Math.round(claims.filter(c=>c.status==='Pending').reduce((s,c)=>s+c.amount,0)).toLocaleString('en-IN');
+  document.getElementById('ar-61-90').textContent='₹28,000';
+  document.getElementById('ar-90plus').textContent='₹'+Math.round(denials.filter(d=>d.status==='Pending').reduce((s,d)=>s+d.amount,0)*0.3).toLocaleString('en-IN');
+  const payers=[...new Set(claims.map(c=>c.payer))];
+  document.getElementById('report-tbody').innerHTML=payers.map(payer=>{
+    const pc=claims.filter(c=>c.payer===payer);
+    const totalCharged=pc.reduce((s,c)=>s+c.amount,0);
+    const totalPaid=payments.filter(p=>p.payer===payer).reduce((s,p)=>s+p.paid,0);
+    const denied=pc.filter(c=>c.status==='Denied').length;
+    const denialRate=pc.length?Math.round((denied/pc.length)*100):0;
+    return`<tr><td><strong>${payer}</strong></td><td>${pc.length}</td><td>₹${Math.round(totalCharged).toLocaleString('en-IN')}</td><td class="green">₹${Math.round(totalPaid).toLocaleString('en-IN')}</td><td class="red">₹${Math.round(totalCharged-totalPaid).toLocaleString('en-IN')}</td><td><span style="color:${denialRate>30?'var(--red)':denialRate>10?'var(--yellow)':'var(--green)'}">${denialRate}%</span></td></tr>`;
+  }).join('');
+}
+
+function emptyRow(cols,msg){return`<tr><td colspan="${cols}" style="text-align:center;padding:36px;color:var(--text3)">${msg}</td></tr>`;}
+
+/* INIT */
+renderDashboard();
+</script>
+</body>
+</html>

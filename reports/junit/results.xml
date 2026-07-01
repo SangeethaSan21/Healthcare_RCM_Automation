@@ -1,0 +1,162 @@
+<testsuites id="" name="" tests="72" failures="0" skipped="0" errors="0" time="74.93887000000001">
+<testsuite name="e2e\ar-calling.spec.ts" timestamp="2026-07-01T12:31:15.886Z" hostname="chromium" tests="9" failures="0" skipped="0" time="8.708" errors="0">
+<testcase name="AR Calling Module › @regression Log AR call — Claim in process outcome" classname="e2e\ar-calling.spec.ts" time="1.766">
+</testcase>
+<testcase name="AR Calling Module › @regression Log AR call — Additional info requested" classname="e2e\ar-calling.spec.ts" time="0.977">
+</testcase>
+<testcase name="AR Calling Module › @regression Log AR call — Escalated to supervisor" classname="e2e\ar-calling.spec.ts" time="0.958">
+</testcase>
+<testcase name="AR Calling Module › @regression Follow-up date is saved with AR call" classname="e2e\ar-calling.spec.ts" time="0.771">
+</testcase>
+<testcase name="AR Calling Module › @regression AR call count increases after logging" classname="e2e\ar-calling.spec.ts" time="0.824">
+</testcase>
+<testcase name="AR Calling Module › @regression Submit empty AR call form shows errors" classname="e2e\ar-calling.spec.ts" time="0.731">
+</testcase>
+<testcase name="AR Calling Module › @regression Search AR calls by claim ID" classname="e2e\ar-calling.spec.ts" time="0.99">
+</testcase>
+<testcase name="AR Calling Module › @regression Search AR calls by payer" classname="e2e\ar-calling.spec.ts" time="0.854">
+</testcase>
+<testcase name="AR Calling Module › @regression Toast shows after logging call" classname="e2e\ar-calling.spec.ts" time="0.837">
+</testcase>
+</testsuite>
+<testsuite name="e2e\claims-management.spec.ts" timestamp="2026-07-01T12:31:15.886Z" hostname="chromium" tests="16" failures="0" skipped="0" time="17.141" errors="0">
+<testcase name="Claims Management Module › @regression Create and submit Office Visit claim (CPT 99213)" classname="e2e\claims-management.spec.ts" time="1.371">
+</testcase>
+<testcase name="Claims Management Module › @regression Create and submit Inpatient claim (CPT 99232)" classname="e2e\claims-management.spec.ts" time="1.041">
+</testcase>
+<testcase name="Claims Management Module › @regression Create high-value Surgical claim (CPT 27447)" classname="e2e\claims-management.spec.ts" time="1.06">
+</testcase>
+<testcase name="Claims Management Module › @regression Save claim as Draft" classname="e2e\claims-management.spec.ts" time="1.077">
+</testcase>
+<testcase name="Claims Management Module › @regression Payer auto-fills when patient is selected" classname="e2e\claims-management.spec.ts" time="1.119">
+</testcase>
+<testcase name="Claims Management Module › @regression Approve a Submitted claim" classname="e2e\claims-management.spec.ts" time="1.201">
+</testcase>
+<testcase name="Claims Management Module › @regression Deny a Submitted claim" classname="e2e\claims-management.spec.ts" time="1.253">
+</testcase>
+<testcase name="Claims Management Module › @regression Denied claim no longer shows Approve/Reject buttons" classname="e2e\claims-management.spec.ts" time="1.13">
+</testcase>
+<testcase name="Claims Management Module › @regression All Claims tab shows all records" classname="e2e\claims-management.spec.ts" time="0.812">
+</testcase>
+<testcase name="Claims Management Module › @regression Pending tab filters only Draft claims" classname="e2e\claims-management.spec.ts" time="0.783">
+</testcase>
+<testcase name="Claims Management Module › @regression Denied tab shows only Denied claims" classname="e2e\claims-management.spec.ts" time="0.8">
+</testcase>
+<testcase name="Claims Management Module › @regression Submit empty claim form shows validation errors" classname="e2e\claims-management.spec.ts" time="0.771">
+</testcase>
+<testcase name="Claims Management Module › @regression Search claim by claim ID" classname="e2e\claims-management.spec.ts" time="0.893">
+</testcase>
+<testcase name="Claims Management Module › @regression Search claim by patient name" classname="e2e\claims-management.spec.ts" time="1.608">
+</testcase>
+<testcase name="Claims Management Module › @regression Search claim by payer name" classname="e2e\claims-management.spec.ts" time="0.913">
+</testcase>
+<testcase name="Claims Management Module › @regression Dashboard denied count increases after claim denial" classname="e2e\claims-management.spec.ts" time="1.309">
+</testcase>
+</testsuite>
+<testsuite name="e2e\dashboard.spec.ts" timestamp="2026-07-01T12:31:15.886Z" hostname="chromium" tests="6" failures="0" skipped="0" time="4.765" errors="0">
+<testcase name="Dashboard Module › @regression Dashboard navigate to Patients from activity table" classname="e2e\dashboard.spec.ts" time="0.769">
+</testcase>
+<testcase name="Dashboard Module › @regression Dashboard navigate to Claims from activity table" classname="e2e\dashboard.spec.ts" time="0.759">
+</testcase>
+<testcase name="Dashboard Module › @regression Dashboard navigate to Denials from activity table" classname="e2e\dashboard.spec.ts" time="0.727">
+</testcase>
+<testcase name="Dashboard Module › @regression Patient stat updates after new registration" classname="e2e\dashboard.spec.ts" time="0.864">
+</testcase>
+<testcase name="Dashboard Module › @regression Denied claims count updates after denial" classname="e2e\dashboard.spec.ts" time="1.219">
+</testcase>
+<testcase name="Dashboard Module › @regression AR calls count shows on dashboard" classname="e2e\dashboard.spec.ts" time="0.427">
+</testcase>
+</testsuite>
+<testsuite name="e2e\denial-management.spec.ts" timestamp="2026-07-01T12:31:15.886Z" hostname="chromium" tests="9" failures="0" skipped="0" time="7.99" errors="0">
+<testcase name="Denial Management Module › @regression File Prior Authorization appeal for denied claim" classname="e2e\denial-management.spec.ts" time="0.765">
+</testcase>
+<testcase name="Denial Management Module › @regression File Medical Necessity appeal" classname="e2e\denial-management.spec.ts" time="0.695">
+</testcase>
+<testcase name="Denial Management Module › @regression Toast shows after filing appeal" classname="e2e\denial-management.spec.ts" time="0.756">
+</testcase>
+<testcase name="Denial Management Module › @regression Appeal dropdown only shows Denied claims" classname="e2e\denial-management.spec.ts" time="0.678">
+</testcase>
+<testcase name="Denial Management Module › @regression Claim status changes to Appealed in Claims module after appeal" classname="e2e\denial-management.spec.ts" time="0.886">
+</testcase>
+<testcase name="Denial Management Module › @regression Submit empty appeal form shows validation errors" classname="e2e\denial-management.spec.ts" time="0.738">
+</testcase>
+<testcase name="Denial Management Module › @regression Search denial by claim ID" classname="e2e\denial-management.spec.ts" time="0.991">
+</testcase>
+<testcase name="Denial Management Module › @regression Search denial by denial reason" classname="e2e\denial-management.spec.ts" time="0.969">
+</testcase>
+<testcase name="Denial Management Module › @e2e Deny claim from Claims module then verify it appears in Denial module" classname="e2e\denial-management.spec.ts" time="1.512">
+</testcase>
+</testsuite>
+<testsuite name="e2e\insurance-verification.spec.ts" timestamp="2026-07-01T12:31:15.886Z" hostname="chromium" tests="9" failures="0" skipped="0" time="7.373" errors="0">
+<testcase name="Insurance Verification Module › @regression Verify insurance as Verified status" classname="e2e\insurance-verification.spec.ts" time="0.885">
+</testcase>
+<testcase name="Insurance Verification Module › @regression Save insurance verification as Failed" classname="e2e\insurance-verification.spec.ts" time="0.798">
+</testcase>
+<testcase name="Insurance Verification Module › @regression Save insurance verification as Pending" classname="e2e\insurance-verification.spec.ts" time="0.725">
+</testcase>
+<testcase name="Insurance Verification Module › @regression Coverage percentage is saved correctly" classname="e2e\insurance-verification.spec.ts" time="0.784">
+</testcase>
+<testcase name="Insurance Verification Module › @regression Policy number is visible in verification list" classname="e2e\insurance-verification.spec.ts" time="0.847">
+</testcase>
+<testcase name="Insurance Verification Module › @regression Submit empty verification form shows validation errors" classname="e2e\insurance-verification.spec.ts" time="0.742">
+</testcase>
+<testcase name="Insurance Verification Module › @regression Search verification by patient name" classname="e2e\insurance-verification.spec.ts" time="0.882">
+</testcase>
+<testcase name="Insurance Verification Module › @regression Search verification by payer name" classname="e2e\insurance-verification.spec.ts" time="0.891">
+</testcase>
+<testcase name="Insurance Verification Module › @regression Toast shows after saving verification" classname="e2e\insurance-verification.spec.ts" time="0.819">
+</testcase>
+</testsuite>
+<testsuite name="e2e\patient-registration.spec.ts" timestamp="2026-07-01T12:31:15.886Z" hostname="chromium" tests="12" failures="0" skipped="0" time="9.683" errors="0">
+<testcase name="Patient Registration Module › @regression Register a new male patient with Star Health insurance" classname="e2e\patient-registration.spec.ts" time="0.848">
+</testcase>
+<testcase name="Patient Registration Module › @regression Register a female patient with United Health Care insurance" classname="e2e\patient-registration.spec.ts" time="0.787">
+</testcase>
+<testcase name="Patient Registration Module › @regression Register patient modal opens on button click" classname="e2e\patient-registration.spec.ts" time="0.682">
+</testcase>
+<testcase name="Patient Registration Module › @regression Modal closes on Escape key" classname="e2e\patient-registration.spec.ts" time="0.884">
+</testcase>
+<testcase name="Patient Registration Module › @regression Submit empty form shows required field errors" classname="e2e\patient-registration.spec.ts" time="0.819">
+</testcase>
+<testcase name="Patient Registration Module › @regression Toast appears after successful registration" classname="e2e\patient-registration.spec.ts" time="0.846">
+</testcase>
+<testcase name="Patient Registration Module › @regression Toggle patient status Active to Inactive" classname="e2e\patient-registration.spec.ts" time="0.59">
+</testcase>
+<testcase name="Patient Registration Module › @regression Toggle patient status Inactive back to Active" classname="e2e\patient-registration.spec.ts" time="0.558">
+</testcase>
+<testcase name="Patient Registration Module › @regression Search patient by ID returns correct result" classname="e2e\patient-registration.spec.ts" time="0.87">
+</testcase>
+<testcase name="Patient Registration Module › @regression Search patient by name" classname="e2e\patient-registration.spec.ts" time="0.902">
+</testcase>
+<testcase name="Patient Registration Module › @regression Search with no match shows empty state" classname="e2e\patient-registration.spec.ts" time="0.876">
+</testcase>
+<testcase name="Patient Registration Module › @regression Dashboard patient count increases after registration" classname="e2e\patient-registration.spec.ts" time="1.021">
+</testcase>
+</testsuite>
+<testsuite name="e2e\payment-posting.spec.ts" timestamp="2026-07-01T12:31:15.886Z" hostname="chromium" tests="8" failures="0" skipped="0" time="10.474" errors="0">
+<testcase name="Payment Posting Module › @regression Post full insurance payment against a claim" classname="e2e\payment-posting.spec.ts" time="1.283">
+</testcase>
+<testcase name="Payment Posting Module › @regression Post partial payment shows Partial status" classname="e2e\payment-posting.spec.ts" time="1.314">
+</testcase>
+<testcase name="Payment Posting Module › @regression Post patient co-pay" classname="e2e\payment-posting.spec.ts" time="1.323">
+</testcase>
+<testcase name="Payment Posting Module › @regression Patient and payer auto-fill when claim is selected" classname="e2e\payment-posting.spec.ts" time="0.967">
+</testcase>
+<testcase name="Payment Posting Module › @regression Balance auto-calculates as Charged minus Paid" classname="e2e\payment-posting.spec.ts" time="1.292">
+</testcase>
+<testcase name="Payment Posting Module › @regression Submit empty payment form shows validation errors" classname="e2e\payment-posting.spec.ts" time="0.703">
+</testcase>
+<testcase name="Payment Posting Module › @regression Search payment by claim ID" classname="e2e\payment-posting.spec.ts" time="2.302">
+</testcase>
+<testcase name="Payment Posting Module › @regression Toast appears after posting payment" classname="e2e\payment-posting.spec.ts" time="1.29">
+</testcase>
+</testsuite>
+<testsuite name="e2e\rcm-e2e-workflow.spec.ts" timestamp="2026-07-01T12:31:15.886Z" hostname="chromium" tests="3" failures="0" skipped="0" time="5.961" errors="0">
+<testcase name="Full RCM Pipeline — End to End › @e2e Happy path: Patient registers → Insurance verified → Claim submitted → Payment posted" classname="e2e\rcm-e2e-workflow.spec.ts" time="2.672">
+</testcase>
+<testcase name="Full RCM Pipeline — End to End › @e2e Denial path: Claim submitted → Denied → AR Call → Appeal filed" classname="e2e\rcm-e2e-workflow.spec.ts" time="1.746">
+</testcase>
+<testcase name="Full RCM Pipeline — End to End › @e2e Dashboard stats reflect full workflow changes" classname="e2e\rcm-e2e-workflow.spec.ts" time="1.543">
+</testcase>
+</testsuite>
+</testsuites>

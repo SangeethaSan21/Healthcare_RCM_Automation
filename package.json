@@ -1,0 +1,26 @@
+{
+  "name": "maxton-rcm-automation",
+  "version": "1.0.0",
+  "description": "Playwright + TypeScript automation for MaxtonRCM - Revenue Cycle Management",
+  "scripts": {
+    "test": "playwright test",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
+    "test:e2e": "playwright test --grep @e2e",
+    "test:patients": "playwright test tests/e2e/patient-registration.spec.ts",
+    "test:insurance": "playwright test tests/e2e/insurance-verification.spec.ts",
+    "test:claims": "playwright test tests/e2e/claims-management.spec.ts",
+    "test:ar": "playwright test tests/e2e/ar-calling.spec.ts",
+    "test:payments": "playwright test tests/e2e/payment-posting.spec.ts",
+    "test:denials": "playwright test tests/e2e/denial-management.spec.ts",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report reports/html"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.44.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "dotenv": "^16.0.0"
+  }
+}
