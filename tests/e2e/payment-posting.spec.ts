@@ -7,7 +7,7 @@ test.describe('Payment Posting Module', () => {
 
   test.beforeEach(async ({ page }) => {
     paymentPage = new PaymentPage(page);
-    await page.goto(process.env.BASE_URL || 'https://YOUR-USERNAME.github.io/maxton-rcm-automation/');
+    await page.goto(process.env.BASE_URL || 'https://Sangeethasan21.github.io/healthcare_rcm_automation/');
     await paymentPage.goToPayments();
   });
 
