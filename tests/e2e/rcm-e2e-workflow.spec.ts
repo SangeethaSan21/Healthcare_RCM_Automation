@@ -69,7 +69,7 @@ test.describe('Full RCM Pipeline — End to End', () => {
   });
 
   test('@e2e Denial path: Claim submitted → Denied → AR Call → Appeal filed', async ({ page }) => {
-    const BASE = process.env.BASE_URL || 'https://YOUR-USERNAME.github.io/maxton-rcm-automation/';
+    const BASE = process.env.BASE_URL || 'https://SangeethaSan21.github.io/healthcare_rcm_automation/';
 
     // ── STEP 1: Submit a claim ──────────────────────────────────────────────
     const claimsPage = new ClaimsPage(page);
@@ -116,7 +116,7 @@ test.describe('Full RCM Pipeline — End to End', () => {
   });
 
   test('@e2e Dashboard stats reflect full workflow changes', async ({ page }) => {
-    const BASE = process.env.BASE_URL || 'https://YOUR-USERNAME.github.io/maxton-rcm-automation/';
+    const BASE = process.env.BASE_URL || 'https://SangeethaSan21.github.io/healthcare_rcm_automation/';
     await page.goto(BASE);
 
     const dash = new DashboardPage(page);
